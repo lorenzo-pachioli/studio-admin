@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { auth } from '@/lib/firebase';
+//import { auth } from '@/lib/firebase';
 import { Logo } from './logo';
 import Link from 'next/link';
 
@@ -48,11 +48,11 @@ export function AuthForm({ mode }: AuthFormProps) {
     setIsLoading(true);
     try {
       if (mode === 'login') {
-        await signInWithEmailAndPassword(auth, values.email, values.password);
+        //await signInWithEmailAndPassword(auth, values.email, values.password);
         toast({ title: 'Success', description: 'Logged in successfully.' });
         router.push('/dashboard');
       } else {
-        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        //await createUserWithEmailAndPassword(auth, values.email, values.password);
         toast({ title: 'Success', description: 'Account created successfully.' });
         router.push('/dashboard');
       }

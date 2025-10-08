@@ -24,10 +24,10 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <AuthProvider>
+        {/* <AuthProvider> */}
           {children}
           <Toaster />
-        </AuthProvider>
+        {/* </AuthProvider> */}
       </body>
     </html>
   );

@@ -22,7 +22,7 @@ export default function DashboardLayout({
     }
   }, [user, loading, router]);
 
-  if (loading || !user) {
+  /* if (loading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="p-4 space-y-4">
@@ -38,10 +38,9 @@ export default function DashboardLayout({
       </div>
     );
   }
-
+ */
   return (
     <SidebarProvider>
-      <div className="min-h-screen">
         <Sidebar className="bg-background border-r">
             <SidebarNav />
         </Sidebar>
@@ -51,7 +50,6 @@ export default function DashboardLayout({
               {children}
             </main>
         </SidebarInset>
-      </div>
     </SidebarProvider>
   );
 }

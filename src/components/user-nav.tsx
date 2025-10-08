@@ -16,8 +16,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/use-auth';
-import { auth } from '@/lib/firebase';
-import { useToast } from './ui/use-toast';
+//import { auth } from '@/lib/firebase';
+import { useToast } from '../hooks/use-toast';
 
 export function UserNav() {
   const { user } = useAuth();
@@ -26,7 +26,7 @@ export function UserNav() {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      //await signOut(auth);
       toast({ title: 'Logged out successfully.' });
       router.push('/login');
     } catch (error) {

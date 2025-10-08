@@ -21,7 +21,7 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold tracking-tight">Your Listings</h1>
         <p className="text-muted-foreground">
           An overview of your products and services on PawsomeMart.
-        p>
+         </p>
       </div>
       <ItemList initialItems={items} />
     </div>
