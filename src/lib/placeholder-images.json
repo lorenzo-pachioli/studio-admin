@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "Happy dog with its owner",
+      "imageUrl": "https://picsum.photos/seed/100/600/600",
+      "imageHint": "happy dog owner"
+    },
+    {
+      "id": "product-1",
+      "description": "A bag of premium dog food",
+      "imageUrl": "https://picsum.photos/seed/101/400/300",
+      "imageHint": "dog food"
+    },
+    {
+      "id": "product-2",
+      "description": "A colorful cat toy wand",
+      "imageUrl": "https://picsum.photos/seed/102/400/300",
+      "imageHint": "cat toy"
+    },
+    {
+      "id": "product-3",
+      "description": "A stylish leather dog collar",
+      "imageUrl": "https://picsum.photos/seed/103/400/300",
+      "imageHint": "dog collar"
+    },
+    {
+      "id": "product-4",
+      "description": "A comfortable pet bed",
+      "imageUrl": "https://picsum.photos/seed/104/400/300",
+      "imageHint": "pet bed"
+    },
+    {
+      "id": "service-1",
+      "description": "A dog being groomed by a professional",
+      "imageUrl": "https://picsum.photos/seed/105/400/300",
+      "imageHint": "dog grooming"
+    },
+    {
+      "id": "service-2",
+      "description": "A veterinarian checking a cat's health",
+      "imageUrl": "https://picsum.photos/seed/106/400/300",
+      "imageHint": "veterinary clinic"
+    },
+    {
+      "id": "service-3",
+      "description": "A dog learning tricks in a training session",
+      "imageUrl": "https://picsum.photos/seed/107/400/300",
+      "imageHint": "dog training"
+    }
+  ]
 }
