@@ -1,28 +1,23 @@
 'use client';
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/use-auth';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { DashboardHeader } from './components/dashboard-header';
 import { SidebarNav } from './components/sidebar-nav';
 import { Skeleton } from '@/components/ui/skeleton';
+import { UserContext } from '@/context/user-context';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useAuth();
-  const router = useRouter();
+/*   const router = useRouter();
 
-  React.useEffect(() => {
-    if (!loading && !user) {
-      router.replace('/login');
-    }
-  }, [user, loading, router]);
+  const {isAuthenticated} = useContext(UserContext);
 
-  /* if (loading || !user) {
+   if (!isAuthenticated) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="p-4 space-y-4">
@@ -37,8 +32,8 @@ export default function DashboardLayout({
         </div>
       </div>
     );
-  }
- */
+  } */
+ 
   return (
     <SidebarProvider>
         <Sidebar className="bg-background border-r">

@@ -1,18 +1,23 @@
 import type { Metadata } from 'next';
-import { AuthProvider } from '@/context/auth-context';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
+import UserProvider from '@/context/user-context';
+import { decrypt, verifySession } from '@/services/statelessSession';
 
 export const metadata: Metadata = {
   title: 'Seller Central',
   description: 'Manage your PawsomeMart products and services.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+  const cookie = (await verifySession()).cookie;
+  const session = await decrypt(cookie);
+  
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -24,10 +29,10 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        {/* <AuthProvider> */}
+         <UserProvider  session={session ? session : { uid: '', expiresAt: new Date(), token: '' }}> 
           {children}
           <Toaster />
-        {/* </AuthProvider> */}
+         </UserProvider> 
       </body>
     </html>
   );

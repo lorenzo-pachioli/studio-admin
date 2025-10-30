@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { signOut } from 'firebase/auth';
 import { LogOut, User as UserIcon } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,18 +14,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAuth } from '@/hooks/use-auth';
-//import { auth } from '@/lib/firebase';
 import { useToast } from '../hooks/use-toast';
+import { useContext } from 'react';
+import { UserContext } from '@/context/user-context';
+import { loggedOut } from '@/services/autentication';
 
 export function UserNav() {
-  const { user } = useAuth();
+  const { user } = useContext(UserContext);
   const router = useRouter();
   const { toast } = useToast();
 
   const handleLogout = async () => {
     try {
-      //await signOut(auth);
+      await loggedOut();
       toast({ title: 'Logged out successfully.' });
       router.push('/login');
     } catch (error) {
