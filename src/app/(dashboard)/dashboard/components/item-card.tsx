@@ -6,13 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Edit, Trash2, Package, ClipboardList } from 'lucide-react';
+import { IProduct } from '@/types';
 
-type ItemCardProps = {
-  item: Item;
-};
-
-export function ItemCard({ item }: ItemCardProps) {
-  const isProduct = item.itemType === 'product';
+export function ItemCard( {item} : {item: IProduct}) {
+  const isProduct = 'product';
 
   return (
     <Card className="flex flex-col">
@@ -45,7 +42,7 @@ export function ItemCard({ item }: ItemCardProps) {
         <div className="flex justify-between items-center w-full">
             <div>
                 {isProduct && <p className="text-lg font-bold">${item.price.toFixed(2)}</p>}
-                {!isProduct && item.location && <p className="text-sm text-muted-foreground">{item.location}</p>}
+                {/* {!isProduct && item.location && <p className="text-sm text-muted-foreground">{item.location}</p>} */}
             </div>
             <div className="flex gap-2">
                 <Button variant="ghost" size="icon">

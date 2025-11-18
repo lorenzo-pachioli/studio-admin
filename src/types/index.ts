@@ -19,7 +19,7 @@ export interface IAddress {
   addressLine2: string;
 }
 
-export interface Product {
+export interface IProduct {
   uid: string; // Firebase document ID
   name: string;
   description: string;
@@ -32,6 +32,7 @@ export interface Product {
   tags?: string[];
   dataAiHint?: string;
 }
+
 
 export interface Service {
   uid: string; // Firebase document ID

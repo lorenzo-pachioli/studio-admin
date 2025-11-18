@@ -1,15 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Item } from '@/lib/types';
 import { ItemCard } from './item-card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { FileQuestion } from 'lucide-react';
+import { ProductsContext } from '@/context/products-context';
+import { IProduct } from '@/types';
 
-export function ItemList({ initialItems }: { initialItems: Item[] }) {
-  const [items, setItems] = useState<Item[]>(initialItems);
+export function ItemList({ initialItems }: { initialItems: IProduct[] }) {
+  //const [items, setItems] = useState<Item[]>(initialItems);
+  const {products, setProducts} = useContext(ProductsContext);
 
-  if (items.length === 0) {
+  useEffect(()=>{
+    console.log("productos: ", products);
+    setProducts(initialItems)
+  },[products]);
+
+  if (products.length === 0) {
     return (
       <Alert>
         <FileQuestion className="h-4 w-4" />
@@ -23,7 +31,7 @@ export function ItemList({ initialItems }: { initialItems: Item[] }) {
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {items.map((item) => (
+      {products.map((item) => (
         <ItemCard key={item.uid} item={item} />
       ))}
     </div>

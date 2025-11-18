@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { getMockItems } from '@/lib/mock-data';
 import { ItemList } from './components/item-list';
+import { getCollections } from '@/services/operations';
+import { IProduct } from '@/types';
 
 export const metadata: Metadata = {
   title: 'Dashboard | Seller Central',
@@ -11,10 +13,20 @@ export const metadata: Metadata = {
 async function getItems() {
   return getMockItems();
 }
+async function fetchProducts(): Promise<IProduct[]> {
+  try {
+    const productsList = await getCollections("products");
+    return productsList as IProduct[];
+  } catch (error) {
+    console.error("Error initializing products:", error);
+    return [];
+  }
+};
 
 export default async function DashboardPage() {
-  const items = await getItems();
+  const items = await fetchProducts();
 
+  
   return (
     <div className="space-y-6">
       <div>
