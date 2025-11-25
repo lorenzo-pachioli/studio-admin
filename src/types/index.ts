@@ -26,7 +26,6 @@ export interface IProduct {
   price: number;
   category: string;
   imageUrl: string;
-  rating?: number;
   stock?: number;
   brand?: string;
   tags?: string[];
@@ -34,7 +33,7 @@ export interface IProduct {
 }
 
 
-export interface Service {
+export interface IService {
   uid: string; // Firebase document ID
   name: string;
   description: string;

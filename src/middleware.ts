@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   //console.log("Session in middleware:", session);
 
   // Rutas protegidas definidas en el config
-  const protectedPaths = ['/dashboard'];
+  const protectedPaths = ['/dashboard', '/services'];
 
   // Verificar si el pathname actual coincide con alguna ruta protegida
   const isProtectedPath = protectedPaths.some(path =>

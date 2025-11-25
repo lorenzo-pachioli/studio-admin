@@ -1,20 +1,20 @@
-'use client';
+"use client";
 import { useState, useContext } from 'react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { UserNav } from '@/components/user-nav';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { Logo } from '@/components/logo';
-import { ProductFormDialog } from './product-form-dialog';
-import { ProductsContext } from '@/context/products-context';
-import { IProduct } from '@/types';
+import { ServiceFormDialog } from '../services/service-form-dialog';
+import { ServicesContext } from '@/context/services-context';
+import { IService } from '@/types';
 
-export function DashboardHeader() {
+export function ServicesHeader() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { addProduct } = useContext(ProductsContext);
+  const { addService } = useContext(ServicesContext);
 
-  const handleAddProduct = (newProduct: IProduct) => {
-    addProduct(newProduct);
+  const handleAddService = (newService: IService) => {
+    addService(newService);
     setIsDialogOpen(false);
   };
 
@@ -32,13 +32,13 @@ export function DashboardHeader() {
       >
         <PlusCircle className="h-3.5 w-3.5" />
         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-          Add Item
+          Add Service
         </span>
       </Button>
-      <ProductFormDialog 
+      <ServiceFormDialog 
         open={isDialogOpen} 
         onOpenChange={setIsDialogOpen} 
-        onSubmit={handleAddProduct} 
+        onSubmit={handleAddService} 
       />
       <UserNav />
     </header>

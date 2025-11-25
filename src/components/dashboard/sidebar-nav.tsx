@@ -1,7 +1,8 @@
 
+'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, Settings } from 'lucide-react';
+import { LayoutGrid, Settings, Briefcase } from 'lucide-react';
 import {
   SidebarHeader,
   SidebarMenu,
@@ -13,6 +14,7 @@ import { Logo } from '@/components/logo';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
+  { href: '/services', label: 'Services', icon: Briefcase },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 

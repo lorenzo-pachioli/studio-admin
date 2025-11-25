@@ -1,6 +1,6 @@
 import { ICartItem, IOrders, IAdmin } from "@/types";
 import { db } from "./firebase";
-import { collection, getDocs, getDoc, doc, setDoc, CollectionReference, DocumentData } from 'firebase/firestore/lite';
+import { collection, getDocs, getDoc, doc, setDoc, CollectionReference, DocumentData, deleteDoc } from 'firebase/firestore/lite';
 import { verifySession, decrypt } from "./statelessSession";
 
 
@@ -31,8 +31,12 @@ export const getNullAdmin = (): IAdmin => {
 }
 
 export async function setData(coll: string, id: string, data: any) {
-  console.log("Instancia de db:", db);
   const docRef = await setDoc(doc(db, coll, id), data);
+  return docRef;
+}
+
+export async function removeData(coll: string, id: string) {
+  const docRef = await deleteDoc(doc(db, coll, id));
   return docRef;
 }
 

@@ -1,18 +1,14 @@
 'use client';
 
 import { useContext, useEffect } from 'react';
-import { ItemCard } from './item-card';
+import { ProductCard } from './product-card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { FileQuestion } from 'lucide-react';
 import { ProductsContext } from '@/context/products-context';
 import { IProduct } from '@/types';
 
-export function ItemList({ initialItems }: { initialItems: IProduct[] }) {
-  const {products, setProducts} = useContext(ProductsContext);
-
-  useEffect(()=>{
-    setProducts(initialItems)
-  },[products]);
+export function ProductList() {
+  const {products} = useContext(ProductsContext);
 
   if (products.length === 0) {
     return (
@@ -29,7 +25,7 @@ export function ItemList({ initialItems }: { initialItems: IProduct[] }) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {products.map((item) => (
-        <ItemCard key={item.uid} item={item} />
+        <ProductCard key={item.uid} item={item} />
       ))}
     </div>
   );

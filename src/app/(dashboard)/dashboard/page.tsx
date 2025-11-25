@@ -1,35 +1,24 @@
 import type { Metadata } from 'next';
-import { ItemList } from '../../../components/dashboard/item-list';
-import { getCollections } from '@/services/operations';
-import { IProduct } from '@/types';
+import { ProductList } from '@/components/dashboard/product-list';
+import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 
 export const metadata: Metadata = {
   title: 'Dashboard | Seller Central',
 };
 
-// Trae los productos de firebase del lado del servidor
-async function fetchProducts(): Promise<IProduct[]> {
-  try {
-    const productsList = await getCollections("products");
-    return productsList as IProduct[];
-  } catch (error) {
-    console.error("Error initializing products:", error);
-    return [];
-  }
-};
-
 export default async function DashboardPage() {
-  const items = await fetchProducts();
   
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Your Listings</h1>
-        <p className="text-muted-foreground">
-          An overview of your products and services on PawsomeMart.
-         </p>
+      <div className="space-y-6">
+        <DashboardHeader />
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Your Listings</h1>
+          <p className="text-muted-foreground">
+            An overview of your products and services on PawsomeMart.
+          </p>
+        </div>
+        <ProductList/>
       </div>
-      <ItemList initialItems={items} />
-    </div>
   );
 }
+

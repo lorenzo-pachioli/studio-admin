@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
-import UserProvider from "@/context/user-context";
-import { decrypt, verifySession } from "@/services/statelessSession";
-import ProductsProvider from "@/context/products-context";
+import GlobalProvider from "@/context/global-context";
 
 export const metadata: Metadata = {
   title: "Seller Central",
@@ -15,8 +13,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookie = (await verifySession()).cookie;
-  const session = await decrypt(cookie);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -33,17 +29,12 @@ export default async function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <UserProvider
-          session={
-            session ? session : { uid: "", expiresAt: new Date(), token: "" }
-          }
-        >
-          <ProductsProvider>
-            {children}
-            <Toaster />
-          </ProductsProvider>
-        </UserProvider>
+        <GlobalProvider>
+          {children}
+          <Toaster />
+        </GlobalProvider>
       </body>
     </html>
   );
 }
+
