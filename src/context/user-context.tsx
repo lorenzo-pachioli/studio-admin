@@ -9,14 +9,12 @@ export const UserContext = createContext<{
   user: IAdmin;
   setUser: React.Dispatch<React.SetStateAction<IAdmin>>;
   isAuthenticated: boolean;
-  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => void;
   login: (userData: IAdmin) => void;
 }>({
   user: getNullAdmin(),
   setUser: () => {},
   isAuthenticated: false,
-  setIsAuthenticated: () => {},
   logout: () => {},
   login: () => {},
 });
@@ -66,7 +64,6 @@ export default function UserProvider({
         user,
         setUser,
         isAuthenticated,
-        setIsAuthenticated,
         logout,
         login
       }}

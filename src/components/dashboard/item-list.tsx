@@ -1,7 +1,6 @@
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
-import { Item } from '@/lib/types';
+import { useContext, useEffect } from 'react';
 import { ItemCard } from './item-card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { FileQuestion } from 'lucide-react';
@@ -9,11 +8,9 @@ import { ProductsContext } from '@/context/products-context';
 import { IProduct } from '@/types';
 
 export function ItemList({ initialItems }: { initialItems: IProduct[] }) {
-  //const [items, setItems] = useState<Item[]>(initialItems);
   const {products, setProducts} = useContext(ProductsContext);
 
   useEffect(()=>{
-    console.log("productos: ", products);
     setProducts(initialItems)
   },[products]);
 

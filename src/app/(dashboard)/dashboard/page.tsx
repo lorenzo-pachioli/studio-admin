@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { getMockItems } from '@/lib/mock-data';
-import { ItemList } from './components/item-list';
+import { ItemList } from '../../../components/dashboard/item-list';
 import { getCollections } from '@/services/operations';
 import { IProduct } from '@/types';
 
@@ -8,11 +7,7 @@ export const metadata: Metadata = {
   title: 'Dashboard | Seller Central',
 };
 
-// This would typically be a server-side fetch from Firestore.
-// For demonstration, we're using mock data.
-async function getItems() {
-  return getMockItems();
-}
+// Trae los productos de firebase del lado del servidor
 async function fetchProducts(): Promise<IProduct[]> {
   try {
     const productsList = await getCollections("products");
@@ -25,7 +20,6 @@ async function fetchProducts(): Promise<IProduct[]> {
 
 export default async function DashboardPage() {
   const items = await fetchProducts();
-
   
   return (
     <div className="space-y-6">

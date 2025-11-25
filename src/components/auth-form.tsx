@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +27,7 @@ import Link from "next/link";
 import logInWithEmail from "@/services/autentication";
 import { getAdminById, getAdminColection, setData } from "@/services/operations";
 import { createSession } from "@/services/statelessSession";
+import { UserContext } from "@/context/user-context";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
@@ -43,6 +44,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const {login} = useContext(UserContext);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,6 +69,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         const userData = await getAdminById(userCredential.uid);
         if (!userData) throw new Error("User data not found");
 
+        login(userData);
         toast({ title: "Success", description: "Logged in successfully." });
         router.push("/dashboard");
       } else {

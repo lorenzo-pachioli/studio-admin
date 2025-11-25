@@ -17,19 +17,6 @@ export const ProductsContext = createContext<{
 export default function ProductsProvider({ children }: any) {
   const [products, setProducts] = useState<IProduct[]>([]);
 
-  // Initialize products from local storage or set to empty array
-/*   React.useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const productsList = await getCollections("products");
-        setProducts(productsList);
-      } catch (error) {
-        console.error("Error initializing products:", error);
-      }
-    };
-    fetchProducts();
-  }, []); */
-
   const useProductById = (id: string): IProduct|undefined => {
     const product = products.find((product) => {
       if (product.uid == id) return product;
@@ -49,3 +36,4 @@ export default function ProductsProvider({ children }: any) {
     </ProductsContext.Provider>
   );
 }
+

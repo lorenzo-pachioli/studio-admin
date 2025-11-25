@@ -47,11 +47,11 @@ export async function getCollectionRef(coll: string): Promise<CollectionReferenc
   return docRef;
 }
 
-export async function getCollections(coll: string): Promise<any[]> {
+export async function getCollections<T = any>(coll: string): Promise<T[]> {
 
   const docRef = collection(db, coll);
   const docList = await getDocs(docRef);
-  return docList.docs.map(doc => ({ ...doc.data() }));
+  return docList.docs.map(doc => ({ ...doc.data() } as T));
 }
 
 export async function getAdminById(id: string): Promise<IAdmin> {
