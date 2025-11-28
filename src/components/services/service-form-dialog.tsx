@@ -21,7 +21,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IService } from "@/types";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { UserContext } from "@/context/user-context";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const serviceSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -45,6 +53,7 @@ export function ServiceFormDialog({
   onSubmit,
   service,
 }: ServiceFormDialogProps) {
+  const { user } = useContext(UserContext);
   const form = useForm<z.infer<typeof serviceSchema>>({
     resolver: zodResolver(serviceSchema),
     defaultValues: {
@@ -130,9 +139,20 @@ export function ServiceFormDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Category (e.g., Vet, Grooming)" {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {user.services_categories?.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

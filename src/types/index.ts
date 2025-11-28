@@ -6,6 +6,8 @@ export interface IAdmin {
   addresses: IAddress[];
   email: string | null;
   emailVerified: boolean;
+  products_categories: string[];
+  services_categories: string[];
 }
 
 export interface IAddress {
@@ -45,7 +47,7 @@ export interface IService {
   dataAiHint?: string;
 }
 
-export interface Promotion {
+export interface IPromotion {
   uid: string;
   title: string;
   description: string;

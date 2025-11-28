@@ -28,6 +28,7 @@ import logInWithEmail from "@/services/autentication";
 import { getAdminById, getAdminColection, setData } from "@/services/operations";
 import { createSession } from "@/services/statelessSession";
 import { UserContext } from "@/context/user-context";
+import { userModeler } from "@/lib/utils";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
@@ -79,13 +80,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           values.password
         );
 
-        const userData = {
-          displayName: userCredential.user.displayName || "", // Use provided name if available
-          photoURL: userCredential.user.photoURL || "",
-          email: userCredential.user.email || values.email,
-          emailVerified: userCredential.user.emailVerified || false,
-          addresses: []
-        };
+        const userData = userModeler(userCredential.user);
 
         // Save the new user data to the database
         await setData("Admins", userCredential.user.uid, userData);

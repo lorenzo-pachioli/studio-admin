@@ -1,33 +1,20 @@
-import { ICartItem, IOrders, IAdmin } from "@/types";
+import { IAdmin } from "@/types";
 import { db } from "./firebase";
 import { collection, getDocs, getDoc, doc, setDoc, CollectionReference, DocumentData, deleteDoc } from 'firebase/firestore/lite';
-import { verifySession, decrypt } from "./statelessSession";
+import { userModeler } from "@/lib/utils";
 
 
 export async function getAdminColection(coll: string): Promise<any[]> {
   const users = collection(db, coll);
   const usersList = await getDocs(users);
   const data = usersList.docs.map(doc => {
-    return {
-      name: doc.data().name,
-      uid: doc.data().uid,
-      username: doc.data().username,
-      color: doc.data().color,
-      photo: doc.data().photo
-    }
+    return userModeler(doc.data());
   });
   return data;
 }
 
 export const getNullAdmin = (): IAdmin => {
-  const newUser: IAdmin = {
-    displayName: "",
-    photoURL: "",
-    addresses: [],
-    email: "",
-    emailVerified: false
-  };
-  return newUser;
+  return userModeler();
 }
 
 export async function setData(coll: string, id: string, data: any) {
@@ -62,14 +49,7 @@ export async function getAdminById(id: string): Promise<IAdmin> {
   const docSnap = await getDoc(doc(db, "Admins", id));
   const data = docSnap.data();
   if (data) {
-    const newUser = {
-      displayName: data.displayName, // Use provided name if available
-      photoURL: data.photoURL || "",
-      email: data.email,
-      emailVerified: data.emailVerified || false,
-      addresses: data.addresses || []
-    };
-    return newUser;
+    return userModeler(data);
   } else {
     return getNullAdmin();
   }

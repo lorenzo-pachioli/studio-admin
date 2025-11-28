@@ -5,8 +5,9 @@ import UserProvider from "@/context/user-context";
 import { decrypt, verifySession } from "@/services/statelessSession";
 import ProductsProvider from "@/context/products-context";
 import { getCollections } from "@/services/operations";
-import { IProduct, IService } from "@/types";
+import { IProduct, IService, IPromotion } from "@/types";
 import ServicesProvider from "@/context/services-context";
+import PromotionsProvider from "@/context/promotions-context";
 
 
 export default async function GlobalProvider({
@@ -18,6 +19,7 @@ export default async function GlobalProvider({
   const session = await decrypt(cookie);
   const products = await fetchProducts();
   const services = await fetchServices();
+  const promotions = await fetchPromotions();
 
   return (
     <UserProvider session={
@@ -25,8 +27,10 @@ export default async function GlobalProvider({
           }>
       <ProductsProvider initialProducts={products || [] as IProduct[]}>
         <ServicesProvider initialServices={services || [] as IService[]}>
-          {children}
-          <Toaster />
+          <PromotionsProvider initialPromotions={promotions || [] as IPromotion[]}>
+            {children}
+            <Toaster />
+          </PromotionsProvider>
         </ServicesProvider>
       </ProductsProvider>
     </UserProvider>
@@ -50,6 +54,16 @@ async function fetchServices(): Promise<IService[]> {
     return servicesList as IService[];
   } catch (error) {
     console.error("Error initializing services:", error);
+    return [];
+  }
+};
+
+async function fetchPromotions(): Promise<IPromotion[]> {
+  try {
+    const promotionsList = await getCollections("promotions");
+    return promotionsList as IPromotion[];
+  } catch (error) {
+    console.error("Error initializing promotions:", error);
     return [];
   }
 };

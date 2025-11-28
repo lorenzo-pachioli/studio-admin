@@ -21,6 +21,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IProduct } from "@/types";
+import { useContext } from "react";
+import { UserContext } from "@/context/user-context";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -46,6 +55,7 @@ export function ProductFormDialog({
   onSubmit,
   product,
 }: ProductFormDialogProps) {
+  const { user } = useContext(UserContext);
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -59,6 +69,7 @@ export function ProductFormDialog({
       tags: product?.tags?.join(", ") || "",
     },
   });
+  console.log(user);
 
   const handleSubmit = (values: z.infer<typeof productSchema>) => {
     const newProduct: IProduct = {
@@ -125,9 +136,20 @@ export function ProductFormDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Category" {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {user.products_categories?.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
