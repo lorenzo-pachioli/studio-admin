@@ -21,8 +21,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IService } from "@/types";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { UserContext } from "@/context/user-context";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { deleteImage } from "@/app/actions/cloudinary";
 import {
   Select,
   SelectContent,
@@ -76,6 +78,7 @@ export function ServiceFormDialog({
         location: service.location || "",
         contact: service.contact || "",
       });
+      setSelectedFile(null);
     } else {
       form.reset({
         name: "",
@@ -85,18 +88,41 @@ export function ServiceFormDialog({
         location: "",
         contact: "",
       });
+      setSelectedFile(null);
     }
   }, [service, form, open]);
 
-  const handleSubmit = (values: z.infer<typeof serviceSchema>) => {
-    const newService: IService = {
-      uid: service?.uid || crypto.randomUUID(),
-      ...values,
-      imageUrl: values.imageUrl || "https://placehold.co/600x400",
-    };
-    onSubmit(newService);
-    form.reset();
-    onOpenChange(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleSubmit = async (values: z.infer<typeof serviceSchema>) => {
+    try {
+      setIsUploading(true);
+      let imageUrl = values.imageUrl;
+
+      if (selectedFile) {
+        // If editing and replacing image, delete old one
+        if (service?.imageUrl && service.imageUrl.includes('res.cloudinary.com')) {
+          await deleteImage(service.imageUrl);
+        }
+        imageUrl = await uploadImageToCloudinary(selectedFile);
+      }
+
+      const newService: IService = {
+        uid: service?.uid || crypto.randomUUID(),
+        ...values,
+        imageUrl: imageUrl || "https://placehold.co/600x400",
+      };
+
+      onSubmit(newService);
+      form.reset();
+      setSelectedFile(null);
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Failed to save service:", error);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -188,16 +214,42 @@ export function ServiceFormDialog({
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image URL</FormLabel>
+                  <FormLabel>Service Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/image.jpg" {...field} />
+                    <div className="space-y-2">
+                      <Input
+                        placeholder="https://example.com/image.jpg"
+                        {...field}
+                        disabled={isUploading}
+                      />
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        disabled={isUploading}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setSelectedFile(file);
+                          }
+                        }}
+                      />
+                      {field.value && (
+                        <img
+                          src={field.value}
+                          alt="Preview"
+                          className="h-20 w-20 object-cover rounded-md border"
+                        />
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type="submit">{service ? "Update Service" : "Create Service"}</Button>
+              <Button type="submit" disabled={isUploading}>
+                {isUploading ? "Uploading..." : service ? "Update Service" : "Create Service"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

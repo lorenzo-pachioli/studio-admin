@@ -11,6 +11,7 @@ import { useContext, useState } from 'react';
 import { ServiceFormDialog } from './service-form-dialog';
 import { AlertConfirmation } from '../alert-confirmation';
 import { toast } from '@/hooks/use-toast';
+import { deleteImage } from '@/app/actions/cloudinary';
 
 export function ServiceCard({ item }: { item: IService }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -22,10 +23,18 @@ export function ServiceCard({ item }: { item: IService }) {
     setIsDialogOpen(false);
   };
 
-  const handleDeleteService = () => {
-    removeService(item.uid);
-    setIsDeleteDialogOpen(false);
-    toast({ title: 'Service deleted successfully.' });
+  const handleDeleteService = async () => {
+    try {
+      if (item.imageUrl) {
+        await deleteImage(item.imageUrl);
+      }
+      await removeService(item.uid);
+      setIsDeleteDialogOpen(false);
+      toast({ title: 'Service deleted successfully.' });
+    } catch (error) {
+      console.error('Error deleting service:', error);
+      toast({ title: 'Error deleting service.', variant: 'destructive' });
+    }
   };
 
   return (

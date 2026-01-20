@@ -4,12 +4,11 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Logo } from '@/components/logo';
-import { app  } from '@/services/firebase';
+import { app } from '@/services/firebase';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find((img) => img.id === 'hero-1');
-  console.log("app: ", app.automaticDataCollectionEnabled);
-  //console.log("Firestore initialized:", db.app.name);
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-16 flex items-center">

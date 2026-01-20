@@ -20,9 +20,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { deleteImage } from "@/app/actions/cloudinary";
 import { IProduct } from "@/types";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "@/context/user-context";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
 import {
   Select,
   SelectContent,
@@ -71,16 +73,39 @@ export function ProductFormDialog({
   });
   console.log(user);
 
-  const handleSubmit = (values: z.infer<typeof productSchema>) => {
-    const newProduct: IProduct = {
-      uid: product?.uid || crypto.randomUUID(), // Generate a temporary ID
-      ...values,
-      imageUrl: values.imageUrl || "https://placehold.co/600x400", // Default placeholder
-      tags: values.tags ? values.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
-    };
-    onSubmit(newProduct);
-    form.reset();
-    onOpenChange(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleSubmit = async (values: z.infer<typeof productSchema>) => {
+    try {
+      setIsUploading(true);
+      let imageUrl = values.imageUrl;
+
+      if (selectedFile) {
+        // If we are editing and have an existing image, delete it
+        if (product?.imageUrl && product.imageUrl.includes('res.cloudinary.com')) {
+          await deleteImage(product.imageUrl);
+        }
+        imageUrl = await uploadImageToCloudinary(selectedFile);
+      }
+
+      const newProduct: IProduct = {
+        uid: product?.uid || crypto.randomUUID(), // Generate a temporary ID
+        ...values,
+        imageUrl: imageUrl || "https://placehold.co/600x400", // Default placeholder
+        tags: values.tags ? values.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
+      };
+
+      onSubmit(newProduct);
+      form.reset();
+      setSelectedFile(null);
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Failed to save product:", error);
+      // You might want to show a toast error here
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -159,9 +184,33 @@ export function ProductFormDialog({
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image URL</FormLabel>
+                  <FormLabel>Product Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/image.jpg" {...field} />
+                    <div className="space-y-2">
+                      <Input
+                        placeholder="https://example.com/image.jpg"
+                        {...field}
+                        disabled={isUploading}
+                      />
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        disabled={isUploading}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setSelectedFile(file);
+                          }
+                        }}
+                      />
+                      {field.value && (
+                        <img
+                          src={field.value}
+                          alt="Preview"
+                          className="h-20 w-20 object-cover rounded-md border"
+                        />
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -209,7 +258,9 @@ export function ProductFormDialog({
               )}
             />
             <DialogFooter>
-              <Button type="submit">{product ? "Update Product" : "Create Product"}</Button>
+              <Button type="submit" disabled={isUploading}>
+                {isUploading ? "Uploading..." : product ? "Update Product" : "Create Product"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
